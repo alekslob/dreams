@@ -131,7 +131,7 @@ def mediumListT(T):
         mas.append(sum(at for at in Ti)/len(Ti))
     return mas
 
-def culcRes (file, fileRes, Xglob, Yglob, countM, countS, noise):
+def culcRes (file, fileRes, Xglob, Yglob, countM, countS, noise, vsm):
     mle = MLE.MLE(countM)
     thets = []
     nus2 = []
@@ -143,7 +143,7 @@ def culcRes (file, fileRes, Xglob, Yglob, countM, countS, noise):
         startT.append(getSP(X, Y))
         # print(startT[s])
     # print()
-    for chm in range(len(valuesModel)):
+    for chm in vsm:
         athets = []
         for s in range(countS):    
             x,y = getXY(X, Y)
@@ -164,7 +164,7 @@ def culcRes (file, fileRes, Xglob, Yglob, countM, countS, noise):
     thets.append(mediumListT(startT))
     # nus2.append(mediumListNuDisp(file,startT))
     nus.append(mediumListNu(file, startT))
-    VSM = getVSM(range(len(valuesModel)))
+    VSM = getVSM(vsm)
     printRes(fileRes, thets, nus, VSM, nus2, noise)
 
 def main():
@@ -175,7 +175,7 @@ def main():
         if file == '': raise MyError("Не выбран файл с параметрами")
         countV = 100
         for noise in [0.05]:#i/100 for i in range(5,51,5)]:
-            for drop in [0.2]:#i/100 for i in range(5,51,5)]:
+            for drop in [i/100 for i in range(5,50,5)]:
                 bigNoise = 0.5
                 chd = 0
                 Xglob = []
@@ -186,7 +186,7 @@ def main():
                     Xglob.append(X)
                     Yglob.append(Y)
                 fileName = direct + "/" + valuesDistribution[chd] + " " + str(noise)+ " "+ str(drop)+" "+str(bigNoise) + ".txt"
-                culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, noise)
+                culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, noise, range(len(valuesModel)))
     except MyError as er:
             print(er)
 
