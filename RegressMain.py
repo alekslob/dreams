@@ -175,18 +175,18 @@ def main():
         if file == '': raise MyError("Не выбран файл с параметрами")
         countV = 100
         for noise in [0.05]:#i/100 for i in range(5,51,5)]:
-            for drop in [i/100 for i in range(5,50,5)]:
+            for drop in [0.25]:#i/100 for i in range(5,50,5)]:
                 bigNoise = 0.5
                 chd = 0
                 Xglob = []
                 Yglob = []
-                CountS = 20
+                CountS = 10
                 for s in range(CountS):
                     Y, X = createData(direct, file,  countV, noise, drop,chd, bigNoise, s)
                     Xglob.append(X)
                     Yglob.append(Y)
                 fileName = direct + "/" + valuesDistribution[chd] + " " + str(noise)+ " "+ str(drop)+" "+str(bigNoise) + ".txt"
-                culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, noise, range(len(valuesModel)))
+                culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, noise, [1,2])
     except MyError as er:
             print(er)
 
