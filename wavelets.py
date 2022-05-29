@@ -60,8 +60,8 @@ class WAVE(object):
         c = self.c
         d = self.d
         k = int(math.log(i-1, 2))
-        # z = self.z#pow(*(2**(k/2))*(2-math.sqrt(2))*math.sqrt(math.pi), -1/2)
-        z = 1.031/math.sqrt(2)
+        z = self.z#pow(*(2**(k/2))*(2-math.sqrt(2))*math.sqrt(math.pi), -1/2)
+        # z = 1.031/math.sqrt(2)
         j = i - 2**k
         t = (t-c)/(d-c)
         t = pow(2,k)*t - (j-1)
@@ -83,8 +83,8 @@ class WAVE(object):
         d = self.d
         pi = math.pi
         k = int(math.log(i-1, 2))
-        # z =self.z
-        z = 1.031/math.sqrt(2)
+        z =self.z
+        # z = 1.031/math.sqrt(2)
         j = i - 2**k
         t = (t-c)/(d - c)
         t = pow(2,k)*t - (j-1)

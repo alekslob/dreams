@@ -20,7 +20,9 @@ def forZ(chm, t, N):
     if chm ==1 or chm == 2:
         n = len(t)
         # m = max([-min(t), max(t)])
-        w = WAVE(chm, 1, [int(min(t)-.5),int(max(t)+.5)])
+        if chm==1: ko = 2.4
+        if chm==2: ko = 1.8
+        w = WAVE(chm, 1, [math.ceil(min(t)-1), math.ceil(max(t))])
         return ((2-math.sqrt(2))*math.sqrt(math.pi)*sum(sum(getCoef(i)*w.psi(ti, i) for i in range(2, N+1, 1)) for ti in t)/n + w.psi(0,1))**(-1/2)
     # else: return 0
 
@@ -56,7 +58,7 @@ class MLE(object):
         t2 = [ yi - func(theta, xi) for yi, xi in zip(y, x)]
         
         z = forZ(chm, t2, N)
-        wave = WAVE(chm, z, [int(min(t2)-0.5), int(max(t2)+.5)])
+        wave = WAVE(chm, z, [math.ceil(min(t2)-1), math.ceil(max(t2))])
         ft = -m*math.log(n)
         B = wave.func(t2, N)
         # ft += sum(math.log(abs(b)) for b in B)
