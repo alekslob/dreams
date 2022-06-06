@@ -7,8 +7,8 @@ def func(theta, x):                                                     #   ВХ
     return sum(theta[i]*xi for i, xi in zip(range(len(theta)), x))
 
 def getEst(e, chm, N):
-    # z = forZ(chm, e, N)
-    z = 0.71
+    z = forZ(chm, e, N)
+    # z = 0.71
     wave = WAVE(chm, z, [min(e),max(e)])
     return wave.func(e, N)
 
@@ -19,10 +19,14 @@ def getCoef(i):
 def forZ(chm, t, N):
     if chm ==1 or chm == 2:
         n = len(t)
-        # m = max([-min(t), max(t)])
-        w = WAVE(chm, 1, [int(min(t)-.5),int(max(t)+.5)])
-        return ((2-math.sqrt(2))*math.sqrt(math.pi)*sum(sum(getCoef(i)*w.psi(ti, i) for i in range(2, N+1, 1)) for ti in t)/n + w.psi(0,1))**(-1/2)
-    # else: return 0
+        c = math.ceil(min(t)-1)
+        d = math.ceil(max(t))
+        # t = [(ti-c)/(d-c) for ti in t]
+        if chm ==1: ko = 1.031/math.sqrt(2)
+        else: ko = 1
+        w = WAVE(chm, 1.031/math.sqrt(2), [math.ceil(min(t)-1),math.ceil(max(t))])
+        koef = (2-math.sqrt(2))*math.sqrt(math.pi)
+        return 1/math.sqrt(sum(sum(w.psi(ti, i)*w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n)
 
 class MLE(object):
     def __init__(self, countMembers):
@@ -52,13 +56,18 @@ class MLE(object):
         m = len(Y)
         N = self.N[chm]
         n = len(y)
-        t1 = [ Yi - func(theta, Xi) for Yi, Xi in zip(Y, X)]
+        m = 100
+        # t1 = [ Yi - func(theta, Xi) for Yi, Xi in zip(Y, X)]
         t2 = [ yi - func(theta, xi) for yi, xi in zip(y, x)]
+        c = math.ceil(min(t2)-1)
+        d = math.ceil(max(t2))
+        t1 = [c + i/(m)*(d - c) for i in range(m+1)]
         
-        z = forZ(chm, t2, N)
-        wave = WAVE(chm, z, [int(min(t2)-0.5), int(max(t2)+.5)])
+        # z = forZ(chm, t2, N)
+        # z = 1.031/math.sqrt(2)
+        wave = WAVE(chm, 1, [math.ceil(min(t2)-1), math.ceil(max(t2))])
         ft = -m*math.log(n)
-        B = wave.func(t2, N)
+        # B = wave.func(t2, N)
         # ft += sum(math.log(abs(b)) for b in B)
         for s in range(m):
             B = 0

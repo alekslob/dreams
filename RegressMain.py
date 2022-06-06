@@ -14,7 +14,7 @@ from Errors import MyError
 from tkinter import messagebox as mb
 
 No = 0
-сountMembers = [5,8,34,5, 9]
+сountMembers = [5,8,15,5, 9]
 valuesFurie = [u"Дискретный", u"Быстрый", u"Прямоугольное окно", u"Окно Ханна", u"Окно Хемминга"]
 valuesModel = [u"Морле", u"Мексиканская шляпа", u"DOG", u"LP", u"Фурье"]
 valuesDistribution = [u"Нормальное распределение", u"Экспоненциальное распределение", u"Гамма-распределение", u"Бета-распределение"]
@@ -55,18 +55,18 @@ def func(theta, x):                                                     #   ВХ
 def createData(direct, fileName, countV, noise, drop,chd, bigNoise, i):
     thets = fileThets(fileName)
     countT = len(thets)
-    # Y, X = fileData(direct+"/my.txt")
-    # X = []
-    # x = sorted([rnd.uniform(-1,1) for j in range(countV)])
-    # for j in range(countT):
-    #     X.append([xi**j for xi in x])
-    # X=np.array(X).T
-    # Y = Y1 = [func(thets, xi) for xi in X]
-    # Y = withNoise(Y, noise, drop,chd, bigNoise)
-    # # e = np.array([yi - y1 for yi, y1 in zip(Y, Y1)])
-    # data = np.vstack([np.array(Y), X.T])
+    Y, X = fileData(direct+"/my.txt")
+    X = []
+    x = sorted([rnd.uniform(-1,1) for j in range(countV)])
+    for j in range(countT):
+        X.append([xi**j for xi in x])
+    X=np.array(X).T
+    Y = Y1 = [func(thets, xi) for xi in X]
+    Y = withNoise(Y, noise, drop,chd, bigNoise)
+    # e = np.array([yi - y1 for yi, y1 in zip(Y, Y1)])
+    data = np.vstack([np.array(Y), X.T])
     resFileName = direct + "/" + "my"+str(i) +" " + valuesDistribution[chd] + " "+ " N=" + str(countV) + " T=" + str(countT) + " noise=" + str(noise)+ " drop="+ str(drop)+" BigNoise="+str(bigNoise)+".txt"
-    # np.savetxt(resFileName, data)
+    np.savetxt(resFileName, data)
     return fileData(resFileName)
 
 def getSP(X, Y):
@@ -101,15 +101,24 @@ def printRes(fileName, resT, resNu, VSM, resNu2, noise):
     for nu in resNu2:
         file.write("{0:.4f}\n".format(nu))
     file.close()
-
-    rb = openpyxl.load_workbook('./srkv.xlsx')
+    namexls = './srkv2.xlsx'
+    rb = openpyxl.load_workbook(namexls)
     sheet = rb.active
     i = 1
     while sheet.cell(row = 1, column = i).value: i+=1
     sheet.cell(row = 1, column = i).value = noise
     for j in range(len(resNu)):
         sheet.cell(row = j+2, column = i).value = resNu[j]
-    rb.save('./srkv.xlsx')
+    rb.save(namexls)
+
+def printY(Y,X,thets):
+    rb = openpyxl.load_workbook('./Ysrkv.xlsx')
+    sheet = rb.active
+    for y,j in zip(Y, range(1,len(Y)+1)): sheet.cell(row = 1, column = j).value = y
+    for i in range(len(thets)):
+        Yi = [MLE.func(thets[i], x) for x in X]
+        for y,j in zip(Yi, range(1,len(Yi)+1)): sheet.cell(row = i+2, column = j).value = y
+    rb.save('./Ysrkv.xlsx')
 
 def culcNuTest(fileName, T):
     trueT = fileThets(fileName)
@@ -166,6 +175,7 @@ def culcRes (file, fileRes, Xglob, Yglob, countM, countS, noise, vsm):
     nus.append(mediumListNu(file, startT))
     VSM = getVSM(vsm)
     printRes(fileRes, thets, nus, VSM, nus2, noise)
+    # printY(Y,X,thets)
 
 def main():
     try:
@@ -173,23 +183,31 @@ def main():
         if direct == '': raise MyError("Не выбрана дирректория")
         file = fd.askopenfilename()
         if file == '': raise MyError("Не выбран файл с параметрами")
-        countV = 100
+        # fileName = fd.askopenfilename()
+        # if fileName == '': raise MyError("Не выбран файл с параметрами")
+        countV = 500
         for noise in [0.05]:#i/100 for i in range(5,51,5)]:
-            for drop in [0.25]:#i/100 for i in range(5,50,5)]:
+            for drop in [0.2]:#i/100 for i in range(5,50,5)]:
                 bigNoise = 0.5
                 chd = 0
                 Xglob = []
                 Yglob = []
-                CountS = 10
+                CountS = 1
                 for s in range(CountS):
+                    # Y, X = fileData(fileName)
                     Y, X = createData(direct, file,  countV, noise, drop,chd, bigNoise, s)
                     Xglob.append(X)
                     Yglob.append(Y)
                 fileName = direct + "/" + valuesDistribution[chd] + " " + str(noise)+ " "+ str(drop)+" "+str(bigNoise) + ".txt"
-                culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, noise, [1,2])
+                culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, drop, [2])
     except MyError as er:
             print(er)
 
 
 main()
+# fileName = fd.askopenfilename()
+# if fileName == '': raise MyError("Не выбран файл с параметрами")
+# Y, X = fileData(fileName)
+# thets = [[1,1,1],[3,2,3]]
+# printY(Y,X,thets)
 mb.showinfo("Message", "закончили")

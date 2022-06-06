@@ -23,6 +23,12 @@ class WAVE(object):
                 f[s] += sum(self.psi(ej, i)*p1/n for ej in e)
         return f
 
+    def getCoef(self, i):
+        c = self.c
+        d = self.d
+        k = int(math.log(i-1, 2))
+        return pow(2,-k/2)
+        
     def psi(self, t, i):
         
         
@@ -47,9 +53,9 @@ class WAVE(object):
         if self.chm == 0:
             return stp*math.sqrt(2/math.sqrt(math.pi))
         elif self.chm ==1:
-            return stp*1.031/math.sqrt(2)
+            return stp*self.z#1.031/math.sqrt(2)
         elif self.chm ==2:
-            return stp*1.031/math.sqrt(2)
+            return stp*self.z#1.031/math.sqrt(2)
         elif self.chm ==3:
             return stp
         elif self.chm ==4:
@@ -60,8 +66,8 @@ class WAVE(object):
         c = self.c
         d = self.d
         k = int(math.log(i-1, 2))
-        # z = self.z#pow(*(2**(k/2))*(2-math.sqrt(2))*math.sqrt(math.pi), -1/2)
-        z = 1.031/math.sqrt(2)
+        z = self.z#(2**(k/2))*(2-math.sqrt(2))*math.sqrt(math.pi), -1/2)
+        # z = 1.031/math.sqrt(2)
         j = i - 2**k
         t = (t-c)/(d-c)
         t = pow(2,k)*t - (j-1)
@@ -83,8 +89,8 @@ class WAVE(object):
         d = self.d
         pi = math.pi
         k = int(math.log(i-1, 2))
-        # z =self.z
-        z = 1.031/math.sqrt(2)
+        z =self.z
+        # z = 1.031/math.sqrt(2)
         j = i - 2**k
         t = (t-c)/(d - c)
         t = pow(2,k)*t - (j-1)
