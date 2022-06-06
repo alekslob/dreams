@@ -200,6 +200,7 @@ def main():
                     Yglob.append(Y)
                 fileName = direct + "/" + valuesDistribution[chd] + " " + str(noise)+ " "+ str(drop)+" "+str(bigNoise) + ".txt"
                 culcRes(file, fileName, Xglob, Yglob, сountMembers, CountS, drop, [2])
+
     except MyError as er:
             print(er)
 

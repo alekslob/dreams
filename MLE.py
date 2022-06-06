@@ -19,6 +19,7 @@ def getCoef(i):
 def forZ(chm, t, N):
     if chm ==1 or chm == 2:
         n = len(t)
+
         c = math.ceil(min(t)-1)
         d = math.ceil(max(t))
         # t = [(ti-c)/(d-c) for ti in t]
@@ -27,6 +28,7 @@ def forZ(chm, t, N):
         w = WAVE(chm, 1.031/math.sqrt(2), [math.ceil(min(t)-1),math.ceil(max(t))])
         koef = (2-math.sqrt(2))*math.sqrt(math.pi)
         return 1/math.sqrt(sum(sum(w.psi(ti, i)*w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n)
+
 
 class MLE(object):
     def __init__(self, countMembers):
@@ -62,10 +64,10 @@ class MLE(object):
         c = math.ceil(min(t2)-1)
         d = math.ceil(max(t2))
         t1 = [c + i/(m)*(d - c) for i in range(m+1)]
-        
-        # z = forZ(chm, t2, N)
-        # z = 1.031/math.sqrt(2)
-        wave = WAVE(chm, 1, [math.ceil(min(t2)-1), math.ceil(max(t2))])
+
+        z = forZ(chm, t2, N)
+        wave = WAVE(chm, z, [math.ceil(min(t2)-1), math.ceil(max(t2))])
+
         ft = -m*math.log(n)
         # B = wave.func(t2, N)
         # ft += sum(math.log(abs(b)) for b in B)

@@ -67,6 +67,7 @@ class WAVE(object):
         d = self.d
         k = int(math.log(i-1, 2))
         z = self.z#(2**(k/2))*(2-math.sqrt(2))*math.sqrt(math.pi), -1/2)
+
         # z = 1.031/math.sqrt(2)
         j = i - 2**k
         t = (t-c)/(d-c)
