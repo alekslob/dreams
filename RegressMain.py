@@ -14,7 +14,7 @@ from Errors import MyError
 from tkinter import messagebox as mb
 
 No = 0
-сountMembers = [5,8,15,5, 9]
+сountMembers = [5,8,40,5, 9]
 valuesFurie = [u"Дискретный", u"Быстрый", u"Прямоугольное окно", u"Окно Ханна", u"Окно Хемминга"]
 valuesModel = [u"Морле", u"Мексиканская шляпа", u"DOG", u"LP", u"Фурье"]
 valuesDistribution = [u"Нормальное распределение", u"Экспоненциальное распределение", u"Гамма-распределение", u"Бета-распределение"]
@@ -55,18 +55,18 @@ def func(theta, x):                                                     #   ВХ
 def createData(direct, fileName, countV, noise, drop,chd, bigNoise, i):
     thets = fileThets(fileName)
     countT = len(thets)
-    Y, X = fileData(direct+"/my.txt")
-    X = []
-    x = sorted([rnd.uniform(-1,1) for j in range(countV)])
-    for j in range(countT):
-        X.append([xi**j for xi in x])
-    X=np.array(X).T
-    Y = Y1 = [func(thets, xi) for xi in X]
-    Y = withNoise(Y, noise, drop,chd, bigNoise)
-    # e = np.array([yi - y1 for yi, y1 in zip(Y, Y1)])
-    data = np.vstack([np.array(Y), X.T])
+    # Y, X = fileData(direct+"/my.txt")
+    # X = []
+    # x = sorted([rnd.uniform(-1,1) for j in range(countV)])
+    # for j in range(countT):
+    #     X.append([xi**j for xi in x])
+    # X=np.array(X).T
+    # Y = Y1 = [func(thets, xi) for xi in X]
+    # Y = withNoise(Y, noise, drop,chd, bigNoise)
+    # # e = np.array([yi - y1 for yi, y1 in zip(Y, Y1)])
+    # data = np.vstack([np.array(Y), X.T])
     resFileName = direct + "/" + "my"+str(i) +" " + valuesDistribution[chd] + " "+ " N=" + str(countV) + " T=" + str(countT) + " noise=" + str(noise)+ " drop="+ str(drop)+" BigNoise="+str(bigNoise)+".txt"
-    np.savetxt(resFileName, data)
+    # np.savetxt(resFileName, data)
     return fileData(resFileName)
 
 def getSP(X, Y):
@@ -185,14 +185,14 @@ def main():
         if file == '': raise MyError("Не выбран файл с параметрами")
         # fileName = fd.askopenfilename()
         # if fileName == '': raise MyError("Не выбран файл с параметрами")
-        countV = 500
+        countV = 100
         for noise in [0.05]:#i/100 for i in range(5,51,5)]:
-            for drop in [0.2]:#i/100 for i in range(5,50,5)]:
+            for drop in [i/100 for i in range(5,50,5)]:
                 bigNoise = 0.5
                 chd = 0
                 Xglob = []
                 Yglob = []
-                CountS = 1
+                CountS = 20
                 for s in range(CountS):
                     # Y, X = fileData(fileName)
                     Y, X = createData(direct, file,  countV, noise, drop,chd, bigNoise, s)
