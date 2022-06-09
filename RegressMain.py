@@ -188,6 +188,7 @@ def main():
         countV = 100
         for noise in [0.05]:#i/100 for i in range(5,51,5)]:
             for drop in [i/100 for i in range(5,50,5)]:
+                print(drop)
                 bigNoise = 0.5
                 chd = 0
                 Xglob = []

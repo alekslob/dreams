@@ -20,8 +20,13 @@ def forZ(chm, t, N):
         t = [(ti-c)/(d-c) for ti in t]
         w = WAVE(chm, 1, [math.ceil(min(t)-1), math.ceil(max(t))])
         koef = (2-math.sqrt(2))*math.sqrt(math.pi)
-        # return 1/math.sqrt(sum(sum(w.psi(ti, i)/w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n)
-        return pow(sum(sum(w.psi(ti, i)/w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n, -1/2)
+        res = sum(sum(w.psi(ti, i)/w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n
+        if res>0: res =  pow(sum(sum(w.psi(ti, i)/w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n, -1/2)
+        else: 
+            res = 0
+            print("z = 0")
+        return res
+        # return pow(sum(sum(w.psi(ti, i)/w.getCoef(i) for i in range(2, N+1, 1))*koef + 1 for ti in t)/n, -1/2)
     else: return 0
 
 
@@ -30,6 +35,7 @@ class MLE(object):
         self.N = countMembers
 
     def algFT(self, theta,X, Y, x, y, chm):
+        print(theta)
         N = self.N[chm]
         n = len(y)
         m = len(Y)#100
@@ -48,5 +54,6 @@ class MLE(object):
             B = 0
             for i in range(1, N+1, 1):               
                 B += wave.psi(t1[s], i)*sum(wave.psi(t2i, i) for t2i in t2)
-            ft += math.log(abs(B))
+            if B > 0 :ft += math.log(B)
+            
         return -ft
